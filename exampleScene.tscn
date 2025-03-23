@@ -1,0 +1,102 @@
+[gd_scene load_steps=13 format=3 uid="uid://bneodaegarbb0"]
+
+[ext_resource type="Script" uid="uid://ctf4he2flqrvo" path="res://Camera.gd" id="1_dvbpp"]
+[ext_resource type="Script" uid="uid://drkm6x4a5mcx5" path="res://JumpFlood/overlay_pass.gd" id="1_gmkkt"]
+[ext_resource type="Script" uid="uid://c0qwd6t3v48mh" path="res://JumpFlood/jfa_effect.gd" id="1_mhymo"]
+[ext_resource type="Script" uid="uid://dkhxd2335brjr" path="res://JumpFlood/jfa_pass.gd" id="4_xmb5h"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gmkkt"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_xmb5h"]
+sky_material = SubResource("ProceduralSkyMaterial_gmkkt")
+
+[sub_resource type="Environment" id="Environment_xb346"]
+background_mode = 2
+sky = SubResource("Sky_xmb5h")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_xb346"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_gmkkt")
+outline_color = Color(0, 0, 0, 1)
+outline_width = 20
+print_buffer_resize = false
+print_freed_rids = false
+metadata/_custom_type_script = "uid://drkm6x4a5mcx5"
+
+[sub_resource type="Compositor" id="Compositor_g22dd"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_xb346")])
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_otcqo"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_xmb5h")
+print_buffer_resize = false
+print_freed_rids = false
+metadata/_custom_type_script = "uid://dkhxd2335brjr"
+
+[sub_resource type="Compositor" id="Compositor_w1nqw"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_otcqo")])
+
+[sub_resource type="BoxMesh" id="BoxMesh_mhymo"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_xb346")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("sub_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.77633)
+cull_mask = 32767
+compositor = SubResource("Compositor_g22dd")
+current = true
+script = ExtResource("1_dvbpp")
+sub_camera = NodePath("../JFAEffect/SubViewport/Camera3D")
+
+[node name="JFAEffect" type="Node3D" parent="." node_paths=PackedStringArray("target_camera", "mask_camera", "mask_viewport")]
+script = ExtResource("1_mhymo")
+target_camera = NodePath("../Camera3D")
+mask_camera = NodePath("SubViewport/Camera3D")
+mask_viewport = NodePath("SubViewport")
+metadata/_custom_type_script = "uid://c0qwd6t3v48mh"
+
+[node name="SubViewport" type="SubViewport" parent="JFAEffect"]
+transparent_bg = true
+size = Vector2i(1036, 465)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="JFAEffect/SubViewport"]
+transform = Transform3D(0.992763, -0.0185755, 0.118649, 0, 0.987966, 0.154674, -0.120094, -0.153555, 0.980815, 0.310874, 0.766287, 4.01036)
+cull_mask = 1015808
+compositor = SubResource("Compositor_w1nqw")
+current = true
+fov = 70.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 524288
+mesh = SubResource("BoxMesh_mhymo")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.763624, 0.518508, 0.766628)
+layers = 524288
+mesh = SubResource("BoxMesh_mhymo")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.226042, 0.292555, 1.75612)
+mesh = SubResource("BoxMesh_mhymo")
