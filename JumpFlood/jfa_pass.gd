@@ -67,7 +67,6 @@ func _render_setup() -> void:
 		1.0 / render_size.x,
 		1.0 / render_size.y
 	]);
-	
 	if not (render_scene_buffers.has_texture(context, texture_a) and render_scene_buffers.has_texture(context, texture_b)):
 		create_textures()
 	pass
@@ -84,6 +83,7 @@ func _render_view(p_view : int) -> void:
 		external_img=get_sampler_uniform(ex_depth,nearest_sampler)
 	
 	var depth_image = get_sampler_uniform(depth_texture, nearest_sampler)
+	
 	maskPass(depth_image, image_a,color_image)
 	
 	var max_index = ceil(log(OverlayPass.public_outline_width) / log(2))
@@ -98,7 +98,7 @@ func _render_view(p_view : int) -> void:
 
 
 func maskPass(from: RDUniform, to: RDUniform,color:RDUniform):
-	#if external_img==null:return
+	if external_img==null or color==null:return
 	var uniform_sets : Array[Array];
 	RenderingServer
 	uniform_sets = [
@@ -141,9 +141,11 @@ func jfaPass(from: RDUniform, to: RDUniform, x_dir: bool, index: int):
 		)
 		
 
+
 # Called before _render_setup() if `render_size` has changed.
 func _render_size_changed() -> void:
 	render_scene_buffers.clear_context(context)
+	
 
 func create_textures() -> void:
 	var texture_a_image : RID = create_simple_texture(

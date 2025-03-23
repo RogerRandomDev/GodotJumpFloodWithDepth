@@ -26,8 +26,7 @@ func _initialize_render() -> void:
 	overlay_shader = create_shader(OVERLAY_SHADER_PATH)
 	overlay_shader_pipeline = create_pipeline(overlay_shader)
 	pass
-func get_buffer():
-	return render_scene_buffers
+
 
 # Called at beginning of _render_callback(), after updating render variables
 # and after _render_size_changed().
@@ -37,22 +36,25 @@ func _render_setup() -> void:
 	pass
 
 
-# Called for each view. Run the compute shaders from here.
+# Called for each view. Run the compute shadersww from here.
 func _render_view(p_view : int) -> void:
 	var color_texture = render_scene_buffers.get_color_layer(p_view)
 	var depth_texture = render_scene_buffers.get_depth_layer(p_view)
 	var depth_image = get_sampler_uniform(depth_texture, nearest_sampler)
 	
 	
+	
 	var jfa_color = JFAPass.col_pass_in 
 	var jfa_image = JFAPass.jfa_pass_in
+	
 	var color_image = get_image_uniform(color_texture, 0)
-	#if jfa_color==null:return
+	
+	if jfa_color==null or jfa_image==null:return
 	var uniform_sets : Array[Array] = [
 		[jfa_image],
 		[color_image],
 		[jfa_color],
-		[depth_image]
+		[depth_image],
 	]
 
 	var push_constant = PackedFloat32Array([

@@ -1,7 +1,5 @@
 @tool
 extends Camera3D
-class_name PlayerCamera
-var targetOrigin
 
 @export var sub_camera : Camera3D
 
