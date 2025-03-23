@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://dgwrfau8f8uux"
+path="res://.godot/imported/overlay.glsl-c13a698aaa7307883649a9f0164d83e1.res"
+
+[deps]
+
+source_file="res://JumpFlood/overlay.glsl"
+dest_files=["res://.godot/imported/overlay.glsl-c13a698aaa7307883649a9f0164d83e1.res"]
+
+[params]
+
